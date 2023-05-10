@@ -28,4 +28,4 @@ class Command(BaseCommand):
         for product_item in product_list:
             products.append(Product(**product_item))
         Product.objects.bulk_create(products)
-    print('Данные успешно заполнены!')
+        print('Данные успешно заполнены!')
