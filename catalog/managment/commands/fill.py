@@ -17,6 +17,10 @@ def read_products_data_json():
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
+        category_records = Category.objects.all()
+        category_records.delete()
+        product_records = Product.objects.all()
+        product_records.delete()
         category = []
         products = []
         category_list = read_category_data_json()
