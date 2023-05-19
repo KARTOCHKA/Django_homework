@@ -12,6 +12,8 @@ django = "^4.2.1"
 psycopg2-binary = "^2.9.6"
 pillow = "^9.5.0"
 ipython = "^8.13.2"
+django-bootstrap5 = "^23.1"
+transliterate = "^1.10.2"
 
 
 [build-system]

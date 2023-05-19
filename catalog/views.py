@@ -1,14 +1,32 @@
-from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views import generic
+
+from catalog.models import Product, Contact
 
 
-def home(request):
-    return render(request, 'catalog/home.html')
+class ProductsListView(generic.ListView):
+    model = Product
+    extra_context = {
+        "title": "Каталог товаров"
+    }
 
 
-def contacts(request):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        phone = request.POST.get('phone')
-        message = request.POST.get('message')
-        print(f'You have new message from {name}({phone}): {message}')
-    return render(request, 'catalog/contact.html')
+class ProductDetailView(generic.DetailView):
+    model = Product
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['title'] = context_data['product']
+        return context_data
+
+
+class ContactCreateView(generic.CreateView):
+    model = Contact
+    fields = ('name', 'phone', 'message')
+
+
+class ProductCreateView(generic.CreateView):
+    model = Product
+    fields = ('name', 'description', 'image', 'category', 'price', 'created_date', 'changed_date')
+    success_url = reverse_lazy('catalog:catalog')
+

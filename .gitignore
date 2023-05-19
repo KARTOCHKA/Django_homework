@@ -1,1 +1,9 @@
 /.idea
+venv/
+catalog/__pycache__/
+catalog/migrations/__pycache__/
+config/__pycache__/
+catalog/management/commands/__pycache__/
+catalog/templatetags/__pycache__/
+blog/__pycache__/
+catalog/management/__pycache__/
