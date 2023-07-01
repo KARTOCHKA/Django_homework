@@ -1,11 +1,11 @@
 from django.db import models
+
 from config import settings
 
 NULLABLE = {'blank': True, 'null': True}
 
 
 class Category(models.Model):
-    """Модель, описывающая категорию товара"""
     name = models.CharField(max_length=150, verbose_name='Наименование')
     description = models.TextField(verbose_name='Описание')
 
@@ -19,7 +19,6 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    """Модель описывающая товар"""
     name = models.CharField(max_length=150, verbose_name='Наименование')
     description = models.TextField(verbose_name='Описание')
     image = models.ImageField(upload_to='products/', verbose_name='Изображение', **NULLABLE)
@@ -30,6 +29,10 @@ class Product(models.Model):
     is_published = models.BooleanField(default=False, verbose_name='признак активности товара')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, **NULLABLE)
 
+    def toggle_is_published(self):
+        self.is_published = not self.is_published
+        self.save()
+
     def __str__(self):
         return f'{self.name}'
 
@@ -37,10 +40,19 @@ class Product(models.Model):
         verbose_name = 'продукт'
         verbose_name_plural = 'продукты'
         ordering = ('name',)
+        permissions = [
+            (
+                'set_published_product',
+                'Can publish product'
+            ),
+            (
+                'can_edit_description_and_category_product',
+                'Can edit description and category product'
+            )
+        ]
 
 
 class Contact(models.Model):
-    """Модель описывающая пользователя"""
     name = models.CharField(max_length=150, verbose_name='Имя пользователя')
     phone = models.CharField(max_length=20, verbose_name='Номер телефона')
     message = models.TextField(verbose_name='Сообщение')
@@ -55,9 +67,8 @@ class Contact(models.Model):
 
 
 class Version(models.Model):
-    """Модель, описывающая версию товара"""
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Продукт')
-    num_of_version = models.IntegerField(default=1, verbose_name='Номер версии')
+    num_of_version = models.CharField(default=1, verbose_name='Номер версии')
     title = models.CharField(max_length=150, verbose_name='Название версии', **NULLABLE)
 
     is_active = models.BooleanField(default=True, verbose_name='признак текущей версии')

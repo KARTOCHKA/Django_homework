@@ -15,10 +15,9 @@ class FormStyleMixin:
 
 
 class ProductForm(FormStyleMixin, forms.ModelForm):
-
     class Meta:
         model = Product
-        fields = '__all__'
+        exclude = ('user', 'is_published')
 
     def clean_name(self):
         cleaned_data = self.cleaned_data['name']
@@ -31,6 +30,12 @@ class ProductForm(FormStyleMixin, forms.ModelForm):
         if cleaned_data.lower() in FORBIDDEN_WORDS:
             raise forms.ValidationError(f"Нельзя вносить слово {cleaned_data}, замените его на другое")
         return cleaned_data
+
+
+class ProductFormCutted(ProductForm, FormStyleMixin, forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ('description', 'category')
 
 
 class VersionForm(FormStyleMixin, forms.ModelForm):
