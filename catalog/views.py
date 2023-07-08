@@ -6,7 +6,19 @@ from django.urls import reverse_lazy, reverse
 from django.views import generic
 
 from catalog.forms import ProductForm, VersionForm, ProductFormCutted
-from catalog.models import Product, Contact, Version
+from catalog.models import Product, Contact, Version, Category
+from catalog.services.cashe import get_cache_categories
+
+
+class CategoryListView(generic.ListView):
+    model = Category
+    queryset = get_cache_categories()
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['product_list'] = Product.objects.all()
+        context_data['title'] = "Категории товаров"
+        return context_data
 
 
 class ProductsListView(generic.ListView):
